@@ -2,11 +2,13 @@ const fs = require('fs');
 const request = require('request');
 const progressBar = require('progress');
 
-
+var processData = process.argv;
+var url = processData[2];
+var ex = url.split('.');
+ex = ex.pop();
 var totalBytes;
 var bar;
-
-var downloadIMG = request.get('https://unsplash.imgix.net/photo-1425235024244-b0e56d3cf907?fit=crop&fm=jpg&h=700&q=75&w=1050');
+var downloadIMG = request.get(url);
 console.time('download');
 downloadIMG.on('error',function(err){
     console.log("Download Error " , err);
@@ -30,7 +32,7 @@ downloadIMG.on('response',function(response){
         downloadIMG.on('data', function (chunk) {
             bar.tick(chunk.length);
         });
-        downloadIMG.pipe(fs.createWriteStream('tho.png'))
+        downloadIMG.pipe(fs.createWriteStream('Image.'+ex))
             .on('finish',function(){
                 console.timeEnd('download');
             })
